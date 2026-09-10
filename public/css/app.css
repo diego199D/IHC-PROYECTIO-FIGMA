@@ -1,0 +1,396 @@
+/* ==========================================================================
+   Barberia - hoja de estilos unica (sin frameworks, sin Bootstrap).
+   Paleta y formas extraidas directamente de las imagenes de Figma (figma/*.png).
+   ========================================================================== */
+
+:root {
+    --verde-oscuro: #163832;
+    --verde-oscuro-hover: #0f2721;
+    --verde-oliva: #9ca88c;
+    --verde-oliva-borde: #717d5f;
+    --gris-contenido: #e4e4e4;
+    --blanco: #ffffff;
+    --fondo-app: #171717;
+    --texto-oscuro: #1a1a1a;
+    --texto-claro: #ffffff;
+    --texto-gris: #6e6e6e;
+    --borde-suave: #d6d6d6;
+    --borde-tarjeta: #dedede;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background-color: var(--fondo-app);
+    color: var(--texto-oscuro);
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Los formularios de los wizards envuelven varias filas del grid (contenido + acciones);
+   con "display: contents" el <form> no genera caja propia y no rompe la estructura de
+   .pantalla ni la de .acciones (sus hijos pasan a ser hijos directos del grid/flex). */
+form {
+    display: contents;
+}
+
+/* ==========================================================================
+   GRID: layout general de cada pantalla (header / contenido / acciones / nav).
+   La pantalla se dibuja como una "tarjeta de telefono" flotando sobre el fondo
+   oscuro, igual que cada artboard en el Figma (figma/flujo1y2.png, flujo3y4.png).
+   ========================================================================== */
+.pantalla {
+    display: grid;
+    grid-template-rows: auto 1fr auto auto;
+    width: 100%;
+    max-width: 400px;
+    min-height: calc(100vh - 48px);
+    margin: 24px auto;
+    background-color: var(--fondo-app);
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+}
+
+/* RESPONSIVE (FLEXBOX se usa en .acciones/.nav-inferior mas abajo; aqui, en pantallas
+   de celular reales, quitamos el "marco de telefono" para que la app ocupe todo el
+   ancho como cualquier app movil - no tiene sentido un telefono dentro de un telefono). */
+@media (max-width: 480px) {
+    .pantalla {
+        margin: 0 auto;
+        min-height: 100vh;
+        border-radius: 0;
+        box-shadow: none;
+    }
+}
+
+/* GRID: lista de tarjetas apiladas en una sola columna (barberos, servicios, horas, etc.) */
+.lista-tarjetas {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+/* GRID: campos de un formulario, uno debajo del otro */
+.formulario {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+}
+
+.lista-tarjetas + .formulario {
+    margin-top: 16px;
+}
+
+/* ==========================================================================
+   Encabezado verde oscuro (componente _components/encabezado.blade.php)
+   ========================================================================== */
+.encabezado {
+    /* FLEXBOX: flecha de volver (si existe) a la izquierda, titulo+subtitulo al lado */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: var(--verde-oscuro);
+    color: var(--texto-claro);
+    padding: 22px 20px 20px;
+}
+
+.encabezado__volver {
+    font-size: 20px;
+    line-height: 1;
+    color: var(--texto-claro);
+    flex-shrink: 0;
+}
+
+.encabezado__textos {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.encabezado__titulo {
+    margin: 0;
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.encabezado__subtitulo {
+    margin: 4px 0 0;
+    font-size: 12px;
+    font-weight: 400;
+    color: #cfd8d3;
+}
+
+/* ==========================================================================
+   Contenido (fondo gris claro, scrollable)
+   ========================================================================== */
+.contenido {
+    background-color: var(--gris-contenido);
+    padding: 16px;
+    overflow-y: auto;
+}
+
+.titulo-seccion {
+    margin: 16px 0 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--texto-oscuro);
+}
+
+.contenido__vacio {
+    text-align: center;
+    color: var(--texto-gris);
+    padding: 24px 0;
+    font-size: 14px;
+}
+
+/* ==========================================================================
+   FLEXBOX: tarjeta seleccionable (componente _components/fila-seleccionable.blade.php)
+   Reutilizada para: barberos, horarios, servicios, promociones, bebidas y productos.
+   Estados calcados de figma/componentes.png: blanca (normal) / oliva (seleccionada).
+   ========================================================================== */
+.tarjeta {
+    /* FLEXBOX: icono+texto pegados a la izquierda, precio pegado a la derecha */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background-color: var(--blanco);
+    border: 1px solid var(--borde-tarjeta);
+    border-radius: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.tarjeta__info {
+    /* FLEXBOX: emoji y texto uno al lado del otro dentro de la tarjeta */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.tarjeta__emoji {
+    font-size: 20px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.tarjeta__texto {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.tarjeta__titulo {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--texto-oscuro);
+}
+
+.tarjeta__subtitulo {
+    font-size: 12px;
+    color: var(--texto-gris);
+}
+
+.tarjeta__precio {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--texto-oscuro);
+    white-space: nowrap;
+}
+
+/* El <input type="radio|checkbox"> real queda oculto: la tarjeta entera es la
+   etiqueta clicable (asi la seleccion funciona sin JavaScript). */
+.tarjeta-seleccionable {
+    display: block;
+}
+
+.tarjeta-seleccionable input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Estado "seleccionado" logrado 100% con CSS (:checked), sin JavaScript.
+   Cubre tanto radio (barbero/servicio/hora/bebida) como checkbox (promociones). */
+.tarjeta-seleccionable input:checked + .tarjeta {
+    background-color: var(--verde-oliva);
+    border-color: var(--verde-oliva-borde);
+}
+
+.tarjeta-seleccionable input:checked + .tarjeta .tarjeta__subtitulo {
+    color: #33352a;
+}
+
+/* ==========================================================================
+   Fila de cita activa (componente _components/fila-cita-activa.blade.php)
+   Reutilizada en: Agenda (sin boton) y Atendiendo al cliente (con boton COBRAR)
+   ========================================================================== */
+.cita-activa {
+    /* FLEXBOX: datos de la cita a la izquierda, boton (si existe) a la derecha */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background-color: var(--blanco);
+    border: 1px solid var(--borde-tarjeta);
+    border-radius: 10px;
+    padding: 12px 14px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.cita-activa__datos {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.cita-activa__hora {
+    font-size: 12px;
+    color: var(--texto-gris);
+}
+
+.cita-activa__cliente {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.cita-activa__servicio {
+    font-size: 12px;
+    color: var(--texto-gris);
+}
+
+/* ==========================================================================
+   Botones (componente _components/boton.blade.php) - un unico estilo de pastilla.
+   El ancho NO se fija aqui: lo reparte el contenedor flex padre (.acciones o
+   .cita-activa), asi uno o varios botones en la misma fila quedan bien
+   proporcionados sin JavaScript ni media queries por pantalla.
+   ========================================================================== */
+.boton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--verde-oscuro);
+    color: var(--texto-claro);
+    border: none;
+    border-radius: 24px;
+    padding: 13px 18px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+}
+
+.boton:hover {
+    background-color: var(--verde-oscuro-hover);
+}
+
+.boton--pequeno {
+    padding: 8px 14px;
+    font-size: 12px;
+    flex: none;
+}
+
+/* FLEXBOX: fila de acciones al fondo de cada pantalla (uno o varios botones).
+   RESPONSIVE: al usar flex + flex:1 en cada boton, la fila se reparte sola sin
+   importar si hay 1 o 2 botones ni el ancho de pantalla (celular o escritorio). */
+.acciones {
+    /* Mismo fondo gris que .contenido: en el Figma los botones siguen sobre el
+       mismo fondo claro, no hay una caja oscura separada detras de ellos. */
+    background-color: var(--gris-contenido);
+    padding: 16px;
+    display: flex;
+    gap: 10px;
+}
+
+/* Selector por descendiente (no ">"): con "form { display:contents }" el <form>
+   no genera caja, asi que el .boton queda como hijo directo del flex .acciones
+   aunque en el HTML este anidado dentro de un <form>. */
+.acciones .boton {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+/* ==========================================================================
+   FLEXBOX: navegacion inferior (layouts/_partials/nav-inferior.blade.php)
+   ========================================================================== */
+.nav-inferior {
+    background-color: var(--blanco);
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0 14px;
+    border-top: 1px solid var(--borde-suave);
+}
+
+.nav-inferior__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    font-size: 11px;
+    color: var(--texto-oscuro);
+}
+
+.nav-inferior__emoji {
+    font-size: 18px;
+}
+
+/* ==========================================================================
+   Mensajes flash de exito/error
+   ========================================================================== */
+.mensaje-flash {
+    margin: 0 0 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.mensaje-flash--exito {
+    background-color: #d9ead9;
+    color: #163832;
+}
+
+.mensaje-flash--error {
+    background-color: #f3d6d6;
+    color: #7a1f1f;
+}
+
+/* ==========================================================================
+   Formularios (editar servicio, editar hora, crear promocion)
+   ========================================================================== */
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.campo__etiqueta {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--texto-oscuro);
+}
+
+.campo__input {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--borde-suave);
+    font-size: 14px;
+    background-color: var(--blanco);
+}
+
+.campo__error {
+    font-size: 12px;
+    color: #a12b2b;
+}
